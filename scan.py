@@ -2,7 +2,7 @@ import asyncio
 from bleak import BleakScanner
 
 def detection_callback(device, advertisement_data):
-    if "PicoBeacon1" in device.name:
+    if device.name.startswith("PicoBeacon"):
         print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {device.rssi} - Address: {device.address}")
     else:
         pass
