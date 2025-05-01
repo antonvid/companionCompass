@@ -1,22 +1,22 @@
 import asyncio
 from bleak import BleakScanner
 
-async def main():
-    stop_event = asyncio.Event()
-
-    # TODO: add something that calls stop_event.set()
-
-    def callback(device, advertising_data):
-        print(device, advertising_data)
+def detection_callback(device, advertisement_data):
+    if "PicoBeacon1" in device.name:
+        print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {device.rssi} - Address: {device.address}")
+    else:
         pass
 
-    async with BleakScanner(callback) as scanner:
-        ...
-        # Important! Wait for an event to trigger stop, otherwise scanner
-        # will stop immediately.
-        await stop_event.wait()
+async def scan():
+    scanner = BleakScanner(detection_callback)
+    print("Scanning for BLE beacons... Press Ctrl+C to stop.")
+    await scanner.start()
+    try:
+        while True:
+            await asyncio.sleep(1)
+    except KeyboardInterrupt:
+        print("\nScan stopped.")
+        await scanner.stop()
 
-    # scanner stops when block exits
-    ...
-
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(scan())
