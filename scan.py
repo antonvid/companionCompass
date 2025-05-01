@@ -13,7 +13,7 @@ async def scan():
     await scanner.start()
     try:
         while True:
-            await asyncio.sleep(0.01)
+            await asyncio.sleep(0.1)
     except KeyboardInterrupt:
         print("\nScan stopped.")
         await scanner.stop()
