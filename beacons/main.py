@@ -43,7 +43,7 @@ class BLEBeacon:
 def main():
     beacon = BLEBeacon("PicoBeacon1")
     while True:
-        led.toggle
+        led.toggle()
         sleep(1)
 
 if __name__ == "__main__":
