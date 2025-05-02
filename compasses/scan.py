@@ -15,9 +15,10 @@ async def scan():
         while True:
             await asyncio.sleep(1)
     except KeyboardInterrupt:
-        print("\nScan stopped.")
-    finally:
         await scanner.stop()
 
 if __name__ == "__main__":
-    asyncio.run(scan())
+    try:
+        asyncio.run(scan())
+    except KeyboardInterrupt:
+        print("Stopped by user")
