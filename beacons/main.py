@@ -42,8 +42,8 @@ class BLEBeacon:
 
 def main():
     beacon = BLEBeacon("PicoBeacon1")
-    led.value(1)
     while True:
+        led.toggle
         sleep(1)
 
 if __name__ == "__main__":
@@ -51,4 +51,3 @@ if __name__ == "__main__":
         main()
     except KeyboardInterrupt:
         led.value(0)
-
