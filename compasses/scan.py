@@ -2,9 +2,10 @@ import asyncio
 import csv
 from bleak import BleakScanner
 
-# open CSV for writing RSSI data
+dist = input("Enter distance from b1: ")
 
-csv_file = open("rssi_data.csv", mode="w", newline="")
+# open CSV for writing RSSI data
+csv_file = open(f"rssi_data_{dist}b1.csv", mode="w", newline="")
 csv_writer = csv.writer(csv_file)
 csv_writer.writerow(["Beacon", "RSSI"]) # header row
 
@@ -29,6 +30,7 @@ async def scan():
         csv_file.close()
 
 if __name__ == "__main__":
+
     try:
         asyncio.run(scan())
     except KeyboardInterrupt:
