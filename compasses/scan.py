@@ -3,7 +3,7 @@ from bleak import BleakScanner
 
 def detection_callback(device, advertisement_data):
     if device.name and device.name.startswith("PicoBeacon"):
-        print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {device.rssi} - Address: {device.address}")
+        print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {advertisement_data.rssi} - Address: {device.address}")
     else:
         pass
 
