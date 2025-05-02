@@ -5,7 +5,7 @@ from bleak import BleakScanner
 dist = input("Enter distance from b1: ")
 
 # open CSV for writing RSSI data
-csv_file = open(f"rssi_data_{dist}b1.csv", mode="w", newline="")
+csv_file = open(f"rssi_data_{dist}.csv", mode="w", newline="")
 csv_writer = csv.writer(csv_file)
 csv_writer.writerow(["Beacon", "RSSI"]) # header row
 
