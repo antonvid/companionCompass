@@ -16,7 +16,7 @@ if distFile:
 
 def detection_callback(device, advertisement_data):
     if device.name and device.name.startswith("PicoBeacon"):
-        rssi = advertisement_data.rssi
+        rssi = abs(advertisement_data.rssi)
         A = 15.284055464858218
         m = -1.9382076537407522
 
