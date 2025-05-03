@@ -2,6 +2,10 @@ import asyncio
 import csv
 from bleak import BleakScanner
 
+# Initialize csv_file and csv_writer as None
+csv_file = None
+csv_writer = None
+
 distFile = input("Enter distance from b1: ")
 
 # open CSV for writing RSSI data
@@ -20,7 +24,7 @@ def detection_callback(device, advertisement_data):
 
         print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {rssi} - Address: {device.address} - Distance: {dist}cm")
         # write data to CSV
-        if csv_file:
+        if csv_writer:
             csv_writer.writerow([device.name, rssi])
     else:
         pass
@@ -35,7 +39,8 @@ async def scan():
     except KeyboardInterrupt:
         await scanner.stop()
     finally:
-        csv_file.close()
+        if csv_file:
+            csv_file.close()
 
 if __name__ == "__main__":
 
