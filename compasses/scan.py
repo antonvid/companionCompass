@@ -2,18 +2,26 @@ import asyncio
 import csv
 from bleak import BleakScanner
 
-dist = input("Enter distance from b1: ")
+distFile = input("Enter distance from b1: ")
 
 # open CSV for writing RSSI data
-csv_file = open(f"rssi_data_{dist}.csv", mode="w", newline="")
-csv_writer = csv.writer(csv_file)
-csv_writer.writerow(["Beacon", "RSSI"]) # header row
+if distFile:
+    csv_file = open(f"rssi_data_{distFile}.csv", mode="w", newline="")
+    csv_writer = csv.writer(csv_file)
+    csv_writer.writerow(["Beacon", "RSSI"]) # header row
 
 def detection_callback(device, advertisement_data):
     if device.name and device.name.startswith("PicoBeacon"):
-        print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {advertisement_data.rssi} - Address: {device.address}")
+        rssi = advertisement_data.rssi
+        A = 15.284055464858218
+        m = -1.9382076537407522
+
+        dist = 10 ** ((A - rssi) / (10 * m))
+
+        print(f"[FOUND] {device.name or 'Unknown'} - RSSI: {rssi} - Address: {device.address} - Distance: {dist}cm")
         # write data to CSV
-        csv_writer.writerow([device.name, advertisement_data.rssi])
+        if csv_file:
+            csv_writer.writerow([device.name, rssi])
     else:
         pass
 
