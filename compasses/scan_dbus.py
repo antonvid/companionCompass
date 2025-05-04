@@ -9,24 +9,21 @@ def parse_device(interface_props):
     rssi = interface_props.get("RSSI", Variant("n", 0)).value
     return name, address, rssi
 
-async def run():
-    # Connect to the system bus
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+def signal_handler(message):
+    print(f"Received message: {message}")
+    if message.message_type != MessageType.SIGNAL:
+        return
+    if message.member != "InterfacesAdded":
+        return
+    path, interfaces = message.body
+    print(f"Path: {path}, Interfaces: {interfaces}")
+    device = interfaces.get("org.bluez.Device1")
+    if not device:
+        return
 
-    # Register signal handler
-    def signal_handler(message):
-        if message.message_type != MessageType.SIGNAL:
-            return
-        if message.member != "InterfacesAdded":
-            return
-        path, interfaces = message.body
-        device = interfaces.get("org.bluez.Device1")
-        if not device:
-            return
-
-        name, address, rssi = parse_device(device)
-        if name.startswith("PicoBeacon"):
-            print(f"[FOUND] {name} | {address} | RSSI: {rssi}")
+    name, address, rssi = parse_device(device)
+    if name.startswith("PicoBeacon"):
+        print(f"[FOUND] {name} | {address} | RSSI: {rssi}")
 
     bus.add_message_handler(signal_handler)
 
