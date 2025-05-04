@@ -11,7 +11,7 @@ def parse_device(interface_props):
     return name, address, rssi
 
 async def run():
-    bus = await MessageBus(bus_type=MessageBus.TYPE_SYSTEM).connect()
+    bus = await MessageBus(bus_name='system').connect()
 
     # Register signal handler
     def signal_handler(message):
