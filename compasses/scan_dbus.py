@@ -1,8 +1,7 @@
 import asyncio
 from dbus_next.aio import MessageBus
-from dbus_next.constants import MessageType
+from dbus_next.constants import MessageType, BusType
 from dbus_next import Variant
-from dbus_next.aio import MessageBus
 
 def parse_device(interface_props):
     name = interface_props.get("Name", Variant("s", "")).value
@@ -11,7 +10,8 @@ def parse_device(interface_props):
     return name, address, rssi
 
 async def run():
-    bus = await MessageBus(bus_name='system').connect()
+    # Connect to the system bus
+    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
 
     # Register signal handler
     def signal_handler(message):
