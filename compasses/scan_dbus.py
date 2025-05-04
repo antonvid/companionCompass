@@ -1,33 +1,47 @@
 import asyncio
 from dbus_next.aio import MessageBus
-from dbus_next.constants import BusType
+from dbus_next.constants import MessageType
 from dbus_next import Variant
 
-async def main():
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+def parse_device(interface_props):
+    name = interface_props.get("Name", Variant("s", "")).value
+    address = interface_props.get("Address", Variant("s", "")).value
+    rssi = interface_props.get("RSSI", Variant("n", 0)).value
+    return name, address, rssi
 
-    introspection = await bus.introspect('org.bluez', '/org/bluez/hci0')
-    obj = bus.get_proxy_object('org.bluez', '/org/bluez/hci0', introspection)
-    adapter = obj.get_interface('org.bluez.Adapter1')
+async def run():
+    bus = await MessageBus(system=True).connect()
 
-    # Start discovery
+    # Register signal handler
+    def signal_handler(message):
+        if message.message_type != MessageType.SIGNAL:
+            return
+        if message.member != "InterfacesAdded":
+            return
+        path, interfaces = message.body
+        device = interfaces.get("org.bluez.Device1")
+        if not device:
+            return
+
+        name, address, rssi = parse_device(device)
+        if name.startswith("PicoBeacon"):
+            print(f"[FOUND] {name} | {address} | RSSI: {rssi}")
+
+    bus.add_message_handler(signal_handler)
+
+    # Get adapter and start discovery
+    introspection = await bus.introspect("org.bluez", "/org/bluez/hci0")
+    obj = bus.get_proxy_object("org.bluez", "/org/bluez/hci0", introspection)
+    adapter = obj.get_interface("org.bluez.Adapter1")
+
     await adapter.call_start_discovery()
-    
-    def interfaces_added(path, interfaces):
-        if 'org.bluez.Device1' in interfaces:
-             props = interfaces['org.bluez.Device1']
-             name = props.get('Name').value if 'Name' in props else ''
-        if name.startswith('PicoBeacon'):
-             address = props.get('Address').value
-             rssi = props.get('RSSI').value if 'RSSI' in props else 'N/A'
-             print(f"Device found: {name} [{address}], RSSI: {rssi}")
 
-    bus.add_message_handler(lambda msg: (
-        interfaces_added(msg.body[0], msg.body[1])
-        if msg.member == 'InterfacesAdded' else None
-    ))
+    print("Scanning for PicoBeacon devices...")
+    try:
+        while True:
+            await asyncio.sleep(1)
+    except KeyboardInterrupt:
+        print("Stopping scan...")
+        await adapter.call_stop_discovery()
 
-    # Keep the program running
-    await asyncio.get_event_loop().create_future()
-
-asyncio.run(main())
+asyncio.run(run())
