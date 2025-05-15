@@ -26,7 +26,7 @@ async def scan_ble_beacons():
 
         # Parse device properties
         name, address, rssi = parse_device(device)
-        if name and name.startswith("PicoBeacon"):
+        if names:
             print(f"[FOUND] {name} | Address: {address} | RSSI: {rssi}")
 
     # Add the signal handler to the bus
