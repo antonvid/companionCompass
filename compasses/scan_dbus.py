@@ -15,19 +15,22 @@ async def scan_ble_beacons():
 
     # Define a signal handler for BLE device discovery
     def signal_handler(message):
-        print(f"Received message: {message}")
+        print(f"Received message: {message}")  # Debug print
         if message.message_type != MessageType.SIGNAL:
             return
+        print(f"Signal member: {message.member}, Interface: {message.interface}")  # Debug print
         if message.member != "InterfacesAdded":
             return
         path, interfaces = message.body
+        print(f"Path: {path}, Interfaces: {interfaces}")  # Debug print
         device = interfaces.get("org.bluez.Device1")
         if not device:
+            print("No org.bluez.Device1 interface found.")  # Debug print
             return
 
         # Parse device properties
         name, address, rssi = parse_device(device)
-        if name:  # Check if the name matches
+        if name and name.startswith("PicoBeacon"):
             print(f"[FOUND] {name} | Address: {address} | RSSI: {rssi}")
 
     # Add the signal handler to the bus
