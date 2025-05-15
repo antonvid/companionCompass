@@ -15,6 +15,7 @@ async def scan_ble_beacons():
 
     # Define a signal handler for BLE device discovery
     def signal_handler(message):
+        print(f"Received message: {message}")
         if message.message_type != MessageType.SIGNAL:
             return
         if message.member != "InterfacesAdded":
