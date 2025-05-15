@@ -15,7 +15,7 @@ def detection_callback(device, advertisement_data):
         dist = 10 ** ((A - rssi) / (10 * m))
         dist = dist/100
 
-        print(f"{dist:.2f}m")
+        print(f"{device.name}: {dist:.2f}m")
 
 async def scan():
     scanner = BleakScanner(detection_callback)
