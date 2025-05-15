@@ -1,6 +1,6 @@
 import asyncio
 from dbus_next.aio import MessageBus
-from dbus_next.constants import MessageType
+from dbus_next.constants import MessageType, BusType
 
 def parse_device(interface_props):
     """Extract device properties like name, address, and RSSI."""
@@ -11,7 +11,7 @@ def parse_device(interface_props):
 
 async def scan_ble_beacons():
     # Connect to the system bus
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
+    bus = await MessageBus(bus_type=BusType.SYSTEM).connect() 
 
     # Define a signal handler for BLE device discovery
     def signal_handler(message):
