@@ -11,7 +11,7 @@ def parse_device(interface_props):
 
 async def scan_ble_beacons():
     # Connect to the system bus
-    bus = await MessageBus(bus_type=BusType.SYSTEM).connect() 
+    bus = await MessageBus(bus_type=BusType.SYSTEM).connect()
 
     # Define a signal handler for BLE device discovery
     def signal_handler(message):
@@ -26,7 +26,7 @@ async def scan_ble_beacons():
 
         # Parse device properties
         name, address, rssi = parse_device(device)
-        if names:
+        if name:  # Check if the name matches
             print(f"[FOUND] {name} | Address: {address} | RSSI: {rssi}")
 
     # Add the signal handler to the bus
