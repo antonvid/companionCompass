@@ -1,8 +1,11 @@
 import asyncio
 from bleak import BleakScanner
-import time
+import logging
 
-# constants for distance calculation
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+
+# Constants for distance calculation
 A = 15.284055464858218
 m = -1.9382076537407522
 
@@ -10,19 +13,30 @@ async def main():
     stop_event = asyncio.Event()
 
     def callback(device, advertising_data):
-        if device.name and device.name.startswith("PicoBeacon"):
-            rssi = abs(advertising_data.rssi)
-            dist = 10 ** ((A - rssi) / (10 * m))
-            dist = dist/100
-            
-            print(f"{device.name}: {dist:.2f}m") # print beacon name plus distance estimate
-
-    async with BleakScanner(callback) as scanner:
-        print("Scanning for BLE beacons... Press Ctrl+C to stop.")
         try:
-            await stop_event.wait()
-        except KeyboardInterrupt: # stop when Ctrl+C is pressed
-            print("\nStopping scan")
+            if device.name and device.name.startswith("antonlapton"):
+                rssi = abs(advertising_data.rssi)
+                dist = 10 ** ((A - rssi) / (10 * m)) / 100
+                logging.info(f"Device: {device.name}, Distance: {dist:.2f}m, RSSI: {advertising_data.rssi}")
+        except Exception as e:
+            logging.error(f"Error in callback: {e}")
+
+    async with BleakScanner(callback, filters={"DuplicateData": False}) as scanner:
+        try:
+            logging.info("Scanning for BLE beacons... Press Ctrl+C to stop.")
+            await asyncio.wait_for(stop_event.wait(), timeout=60)  # Timeout after 60 seconds
+        except asyncio.TimeoutError:
+            logging.info("Scan timed out after 60 seconds.")
+        except asyncio.CancelledError:
+            logging.info("Scan cancelled.")
+        finally:
+            logging.info("Stopping scan...")
+            await scanner.stop()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("Program interrupted by user.")
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
