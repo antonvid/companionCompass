@@ -38,7 +38,7 @@ class BLEBeacon:
         adv_data += bytearray((len(name_bytes) + 1, _ADV_TYPE_NAME)) + name_bytes
         adv_data += bytearray((2, _ADV_TYPE_FLAGS, FLAG_GENERAL_DISC_MODE | FLAG_LE_ONLY))
 
-        self.ble.gap_advertise(100, adv_data)
+        self.ble.gap_advertise(20, adv_data)
 
 def main():
     beacon = BLEBeacon("PicoBeacon1")
