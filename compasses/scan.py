@@ -2,7 +2,7 @@ import asyncio
 from bleak import BleakScanner
 import time
 
-# Constants for distance calculation
+# constants for distance calculation
 A = 15.284055464858218
 m = -1.9382076537407522
 
@@ -23,7 +23,7 @@ async def scan():
     await scanner.start()
     try:
         while True:
-            await asyncio.sleep(0.1)  # Reduced sleep interval for better responsiveness
+            await asyncio.sleep(0.01) 
     except KeyboardInterrupt:
         await scanner.stop()
 
