@@ -22,6 +22,7 @@ class BLEBeacon:
         self.ble = bluetooth.BLE()
         self.ble.active(True)
         self.ble.irq(self._irq)
+        self.counter = 0  # Counter to dynamically change advertisement
 
         self._advertise()
 
@@ -33,18 +34,24 @@ class BLEBeacon:
             self._advertise()  # Start advertising again after disconnect
 
     def _advertise(self):
-        name_bytes = bytes(self.name, 'utf-8')
+        # Update the name with a counter to make it dynamic
+        dynamic_name = f"{self.name}_{self.counter}"
+        self.counter += 1
+
+        name_bytes = bytes(dynamic_name, 'utf-8')
         adv_data = bytearray()
         adv_data += bytearray((len(name_bytes) + 1, _ADV_TYPE_NAME)) + name_bytes
         adv_data += bytearray((2, _ADV_TYPE_FLAGS, FLAG_GENERAL_DISC_MODE | FLAG_LE_ONLY))
 
         self.ble.gap_advertise(20, adv_data)
+        print(f"Advertising: {dynamic_name}")
 
 def main():
     beacon = BLEBeacon("PicoBeacon1")
     while True:
+        beacon._advertise()  # Dynamically update advertisement
         led.toggle()
-        sleep(1)
+        sleep(5)  # Change advertisement every 5 seconds
 
 if __name__ == "__main__":
     try:
