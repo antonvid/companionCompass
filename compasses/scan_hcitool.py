@@ -37,7 +37,15 @@ async def main():
 
             mac_address, name = parse_hcitool_output(line)
             if name and name.startswith("PicoBeacon"):
-                logging.info(f"Found device: {name} | MAC: {mac_address}")
+                # Extract RSSI value from the line (if available)
+                rssi = "Unknown"  # Default value if RSSI is not present
+                if "RSSI:" in line:
+                    try:
+                        rssi = int(line.split("RSSI:")[-1].strip())
+                    except ValueError:
+                        pass
+
+                logging.info(f"{name} | RSSI: {rssi}")
 
     except KeyboardInterrupt:
         logging.info("Stopping scan...")
