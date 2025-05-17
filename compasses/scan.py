@@ -6,8 +6,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
 # Constants for distance calculation
-A = 15.284055464858218
-m = -1.9382076537407522
+A = 17.48043210453444
+m = -1.8071351056155527
 
 async def main():
     stop_event = asyncio.Event()
@@ -21,7 +21,7 @@ async def main():
         except Exception as e:
             logging.error(f"Error in callback: {e}")
 
-    async with BleakScanner(callback, filters={"DuplicateData": False}) as scanner:
+    async with BleakScanner(callback, filters={"DuplicateData": True}) as scanner:
         try:
             logging.info("Scanning for BLE beacons... Press Ctrl+C to stop.")
             await asyncio.wait_for(stop_event.wait(), timeout=60)  # Timeout after 60 seconds

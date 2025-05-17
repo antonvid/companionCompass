@@ -5,9 +5,9 @@ import logging
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
 
-# Constants for distance calculation
-A = 15.284055464858218
-m = -1.9382076537407522
+# constants for distance calculation
+A = 17.48043210453444
+m = -1.8071351056155527
 
 def parse_hcitool_output(line):
     """Parse a line of hcitool output to extract device information."""
