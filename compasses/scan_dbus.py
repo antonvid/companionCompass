@@ -29,7 +29,7 @@ async def scan_ble_beacons():
 
         # Parse device properties
         name, address, rssi = parse_device(device)
-        if name and name.startswith("PicoBeacon"):
+        if name and name.startswith("beacon"):
             logging.info(f"[FOUND] {name} | Address: {address} | RSSI: {rssi}")
 
     # Add the signal handler to the bus
@@ -42,7 +42,7 @@ async def scan_ble_beacons():
         adapter = obj.get_interface("org.bluez.Adapter1")
 
         await adapter.call_start_discovery()
-        logging.info("Scanning for BLE beacons with names starting with 'PicoBeacon'...")
+        logging.info("Scanning for BLE beacons with names starting with 'beacon'...")
 
         # Keep the script running to listen for signals
         await asyncio.Future()
