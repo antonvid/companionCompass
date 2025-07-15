@@ -14,7 +14,7 @@ async def main():
 
     def callback(device, advertising_data):
         try:
-            if device.name and device.name.startswith("PicoBeacon"):
+            if device.name and device.name.startswith("beacon"):
                 rssi = abs(advertising_data.rssi)
                 dist = 10 ** ((A - rssi) / (10 * m)) / 100
                 logging.info(f"Device: {device.name}, Distance: {dist:.2f}m, RSSI: {advertising_data.rssi}")
