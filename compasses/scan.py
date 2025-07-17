@@ -11,7 +11,7 @@ async def main():
         except Exception as e:
             print(f"Error in callback: {e}")
 
-    async with BleakScanner(callback, filters={"DuplicateData": True}) as scanner:
+    async with BleakScanner(callback, scanning_mode="active") as scanner:
         try:
             print("Scanning for BLE beacons... Press Ctrl+C to stop.")
             await stop_event.wait()
