@@ -14,6 +14,7 @@ async def main():
     async with BleakScanner(callback, filters={"DuplicateData": True}) as scanner:
         try:
             print("Scanning for BLE beacons... Press Ctrl+C to stop.")
+            await stop_event.wait()
         except asyncio.CancelledError:
             print("Scan cancelled.")
         finally:
