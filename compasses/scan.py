@@ -7,7 +7,7 @@ async def main():
     def callback(device, advertising_data):
         try:
             if device.name and device.name.startswith("beacon"):
-                print(f"Device: {device.name}, RSSI: {advertising_data.rssi}")
+                print(f"Device: {device.name}, RSSI: {advertising_data.rssi}, UUIDs: {advertising_data.service_uudis}")
         except Exception as e:
             print(f"Error in callback: {e}")
 
