@@ -18,7 +18,8 @@ async def main():
         print("Scanning...")
 
         async for bd, ad in scanner.advertisement_data():
-            print(f" Found {bd!r} with {ad!r}")
+            if bd.name == "BLE BEACON":
+                print(f" Found {bd!r} with {ad!r}")
 
 
 if __name__ == "__main__":
