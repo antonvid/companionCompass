@@ -18,7 +18,7 @@ async def main():
         print("Scanning...")
 
         async for bd, ad in scanner.advertisement_data():
-            print(f" Found{' it' if found else ''} {bd!r} with {ad!r}")
+            print(f" Found {bd!r} with {ad!r}")
 
 
 if __name__ == "__main__":
