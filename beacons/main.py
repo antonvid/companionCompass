@@ -38,14 +38,14 @@ class BLEBeacon:
         dynamic_name = f"{self.name}_{self.counter}"
         self.counter += 1
 
-        name_bytes = bytes(dynamic_name, 'utf-8')
-        adv_data = bytearray()
-        adv_data += bytearray((len(name_bytes) + 1, _ADV_TYPE_NAME)) + name_bytes
-        adv_data += bytearray((2, _ADV_TYPE_FLAGS, FLAG_GENERAL_DISC_MODE | FLAG_LE_ONLY))
+        # name_bytes = bytes(dynamic_name, 'utf-8')
+        adv_data = "02 01 1A 1A FF 4C 00 02 15 E2 0A 39 F4 73 F5 4B C4 A1 2F 17 D1 AD 07 A9 61 00 00 00 00 C8 00"
+        # adv_data += bytearray((len(name_bytes) + 1, _ADV_TYPE_NAME)) + name_bytes
+        # adv_data += bytearray((2, _ADV_TYPE_FLAGS, FLAG_GENERAL_DISC_MODE | FLAG_LE_ONLY))
         
         led.on()
         self.ble.gap_advertise(20, adv_data)
-        print(f"Advertising: {dynamic_name}")
+        # print(f"Advertising: {dynamic_name}")
         led.off()
 
 def main():
