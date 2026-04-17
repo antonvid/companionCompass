@@ -18,8 +18,7 @@ async def main():
         print("Scanning...")
 
         async for bd, ad in scanner.advertisement_data():
-            if bd.address == "CF:22:AF:03:E7:4E":
-                print(f" Found {bd!r} with {ad!r}")
+            print(f" Found {bd!r} with {ad!r}")
 
 
 if __name__ == "__main__":
