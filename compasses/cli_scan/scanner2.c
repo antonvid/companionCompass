@@ -148,8 +148,8 @@ int main()
 	int count = 0;
 
 	const int timeout = 10;
-	const int reset_timeout = 0; // wether to reset the timer on a received scan event (continuous scanning)
-	const int max_count = 1000;
+	const int reset_timeout = 1; // wether to reset the timer on a received scan event (continuous scanning)
+	const int max_count = 40;
 
 	// Install a signal handler so that we can set the exit code and clean up
 	if ( signal( SIGALRM, signal_handler ) == SIG_ERR )
@@ -185,10 +185,6 @@ int main()
 			meta_event = (evt_le_meta_event*)(buf+HCI_EVENT_HDR_SIZE+1);
 			if ( meta_event->subevent == EVT_LE_ADVERTISING_REPORT )
 			{
-				count++;
-				if ( reset_timeout != 0 && timeout > 0 ) // reset/restart the alarm timer
-					alarm( timeout );
-
 				// print results
 				uint8_t reports_count = meta_event->data[0];
 				void * offset = meta_event->data + 1;
@@ -202,6 +198,10 @@ int main()
     						offset = info->data + info->length + 2;
     						continue;
 					}
+
+					count++;
+					if ( reset_timeout != 0 && timeout > 0 ) // reset/restart the alarm timer
+						alarm( timeout );
 
 					printf("%s %d", addr, (int8_t)info->data[info->length]);
 					for (int i = 0; i < info->length; i++)

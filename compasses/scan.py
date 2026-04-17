@@ -6,7 +6,7 @@ async def main():
 
     def callback(device, advertising_data):
         try:
-            if device.name:
+            if device.name and device.name.startswith("28-CD-C1-0F-BE-9A"):
                 print(f"Device: {device.name}, RSSI: {advertising_data.rssi}")
         except Exception as e:
             print(f"Error in callback: {e}")
