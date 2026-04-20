@@ -1,5 +1,19 @@
 import subprocess
+import csv
 
-res = subprocess.run(["sudo", "./cli_scan/scanner2"], capture_output=True, text=True)
+dist = input("enter distance to beacon: ")
 
-print(res.stdout)
+with open('data.csv', 'a', newline='') as csvfile:
+    writer = csv.writer(csvfile)
+
+    for i in range(4):
+        
+        process = subprocess.Popen(
+                ["sudo","./cli/scanner2"],
+                stdout=subprocess.PIPE,
+                text=True
+        )
+
+        for line in process.stdout:
+            data = line.split()
+            writer.writerow([dist, data[1]])
