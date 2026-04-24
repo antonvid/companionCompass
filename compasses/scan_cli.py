@@ -3,7 +3,7 @@ import csv
 
 dist = input("enter distance to beacon: ")
 
-with open('data.csv', 'a', newline='') as csvfile:
+with open('data_2.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile)
 
     for i in range(4):
