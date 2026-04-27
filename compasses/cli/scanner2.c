@@ -12,7 +12,7 @@
 #include <bluetooth/bluetooth.h>
 #include <bluetooth/hci.h>
 #include <bluetooth/hci_lib.h>
-#include <time.h>
+#include <sys/time.h>
 
 int device;
 
@@ -59,6 +59,11 @@ void signal_handler( int s )
 int main()
 {
 	int ret, status;
+	
+	struct timeval tv;
+	struct timezone tz;
+
+	float t;
 
 	// Get HCI device.
 
@@ -202,6 +207,11 @@ int main()
 					count++;
 					if ( reset_timeout != 0 && timeout > 0 ) // reset/restart the alarm timer
 						alarm( timeout );
+					
+					gettimeofday(&tv, &tz);
+
+
+					printf("%d.%d ", tv.tv_sec, (tv.tv_usec/10000));
 
 					printf("%s %d", addr, (int8_t)info->data[info->length]);
 					for (int i = 0; i < info->length; i++)

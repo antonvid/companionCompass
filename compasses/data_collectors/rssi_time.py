@@ -1,19 +1,23 @@
 import subprocess
 import csv
 
-dist = input("enter distance to beacon: ")
-
-with open('data_2.csv', 'a', newline='') as csvfile:
+with open('../data/rssi_time.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile)
+
 
     for i in range(4):
         
         process = subprocess.Popen(
-                ["sudo","./cli/scanner2"],
+                ["sudo","../cli/scanner2"],
                 stdout=subprocess.PIPE,
                 text=True
         )
 
         for line in process.stdout:
             data = line.split()
-            writer.writerow([dist, data[1]])
+
+            row = [data[0], data[2]]
+            print(row)
+            writer.writerow(row)
+
+        exit_codes = process.wait()

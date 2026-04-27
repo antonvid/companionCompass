@@ -16,4 +16,4 @@ with open('data_2.csv', 'a', newline='') as csvfile:
 
         for line in process.stdout:
             data = line.split()
-            writer.writerow([dist, data[1]])
+            writer.writerow([dist, data[2]])
