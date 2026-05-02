@@ -2,12 +2,12 @@ import subprocess
 import csv
 
 dist = input("enter distance to beacon: ")
-rounds = int(input("enter number of scans: "))
+n = int(input("enter number of scans: "))
 
 with open('../data/rssi_dist.csv', 'a', newline='') as csvfile:
     writer = csv.writer(csvfile)
 
-    for i in range(rounds):
+    for i in range(n):
         
         process = subprocess.Popen(
                 ["sudo","../cli/scanner2"],
@@ -18,6 +18,6 @@ with open('../data/rssi_dist.csv', 'a', newline='') as csvfile:
         for line in process.stdout:
             data = line.split()
             writer.writerow([dist, data[2]])
-            print('written:',[dist, data[2]])
-        
+       
+        print(f"{i}/{n}")
         exit_code = process.wait()
