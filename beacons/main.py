@@ -1,61 +1,89 @@
+# https://gist.github.com/N3MIS15/589062360a658a36b9c810fec8bb0c91
+import struct
+import ubluetooth as bt
+from micropython import const
 from machine import Pin
 from time import sleep
-import bluetooth
-from micropython import const
 
-_IRQ_CENTRAL_CONNECT = const(1)
-_IRQ_CENTRAL_DISCONNECT = const(2)
+MANUFACTURER_ID         = const(0x004C)
+DEVICE_TYPE             = const(0x02)
+DATA_LENGTH             = const(0x15)
+BR_EDR_NOT_SUPPORTED    = const(0x04)
+FLAG_BROADCAST          = const(0x01)
+MANUFACTURER_DATA       = const(0xFF)
 
-_ADV_TYPE_FLAGS = const(0x01)
-_ADV_TYPE_NAME = const(0x09)
-_ADV_TYPE_UUID16_COMPLETE = const(0x03)
-
-FLAG_GENERAL_DISC_MODE = const(0x02)
-FLAG_LE_ONLY = const(0x04)
-
-# Onboard LED pin (GP25)
 led = machine.Pin("LED", machine.Pin.OUT)
 
-class BLEBeacon:
-    def __init__(self, name):
-        self.name = name
-        self.ble = bluetooth.BLE()
+def convert_tx_power(dbm):
+    return dbm + 0xFF + 1
+
+class iBeacon():
+    def __init__(self, ble, uuid, major, minor, tx_power, interval):
+        # Setup BLE
+        self.ble = ble
+        self.ble.active(False)
         self.ble.active(True)
-        self.ble.irq(self._irq)
-        self.counter = 0  # Counter to dynamically change advertisement
+        print("BLE Activated")
 
-        self._advertise()
+        self.uuid = uuid
+        self.major = major
+        self.minor = minor
+        self.tx_power = convert_tx_power(tx_power)
+        self.adv_payload = self.create_payload()
+        self.interval = interval
 
-    def _irq(self, event, data):
-        if event == _IRQ_CENTRAL_CONNECT:
-            print("Central connected")
-        elif event == _IRQ_CENTRAL_DISCONNECT:
-            print("Central disconnected")
-            self._advertise()  # Start advertising again after disconnect
 
-    def _advertise(self):
-        # Update the name with a counter to make it dynamic
-        dynamic_name = f"{self.name}_{self.counter}"
-        self.counter += 1
+    def create_payload(self):
+        payload = bytearray()
+            
+        #Set advertising flag
+        value    = struct.pack('B', BR_EDR_NOT_SUPPORTED)
+        payload += struct.pack('BB', len(value) + 1, FLAG_BROADCAST) + value
 
-        # name_bytes = bytes(dynamic_name, 'utf-8')
-        adv_data = "02 01 1A 1A FF 4C 00 02 15 E2 0A 39 F4 73 F5 4B C4 A1 2F 17 D1 AD 07 A9 61 00 00 00 00 C8 00"
-        # adv_data += bytearray((len(name_bytes) + 1, _ADV_TYPE_NAME)) + name_bytes
-        # adv_data += bytearray((2, _ADV_TYPE_FLAGS, FLAG_GENERAL_DISC_MODE | FLAG_LE_ONLY))
-        
-        led.on()
-        self.ble.gap_advertise(20, adv_data)
-        # print(f"Advertising: {dynamic_name}")
-        led.off()
+        # Set advertising data
+        value    = struct.pack('<H2B', MANUFACTURER_ID, DEVICE_TYPE, DATA_LENGTH) 
+        value   += self.uuid
+        value   += struct.pack(">2HB", self.major, self.minor, self.tx_power)
+        payload += struct.pack('BB', len(value) + 1, MANUFACTURER_DATA) + value
 
-def main():
-    beacon = BLEBeacon("beacon1")
-    while True:
-        beacon._advertise()  # Dynamically update advertisement
-        sleep(1)  # Change advertisement every 5 seconds
+        return payload
+
+
+    def advertise(self):
+        print("Advertising: " + str(self.adv_payload))
+        self.ble.gap_advertise(None)
+        self.ble.gap_advertise(self.interval, adv_data=self.adv_payload, connectable=False)
+
+
+    def update(self, major, minor, advertise_interval):
+        self.ble.active(False)
+
+        self.major = major
+        self.minor = minor
+        self.adv_payload = self.create_payload()
+
+        self.ble.active(True)
+        self.advertise(advertise_interval)
+
+
+def demo(adv_interval):
+    beacon = iBeacon(
+        ble         = bt.BLE(), 
+        uuid        = bytearray((
+                        0xa4, 0x95, 0xbb, 0x10, 0xc5, 0xb1, 0x4b, 0x44, 
+                        0xb5, 0x12, 0x13, 0x70, 0xf0, 0x2d, 0x74, 0xde
+                    )),
+        major       = 62,
+        minor       = 1050,
+        tx_power    = -50,
+        interval 	= adv_interval
+    )
+
+    beacon.advertise()
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        led.value(0)
+    adv_int = 100000
+    demo(adv_int)
+    while True:
+        led.toggle()
+        sleep(adv_int/1000000)
