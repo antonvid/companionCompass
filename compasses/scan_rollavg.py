@@ -11,7 +11,7 @@ rssi_rolavg = 0
 while True:
 
     process = subprocess.Popen(
-            ["sudo","./cli/scanner_AD"],
+            ["sudo","./cli/scanner_mac_fltr"],
             stdout=subprocess.PIPE,
             text=True
     )
