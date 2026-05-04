@@ -2,7 +2,7 @@ import subprocess
 import csv
 import os
 
-filepath = "../data/rssi_coord.csv"
+filepath = "../data/rssi_coord_2.csv"
 
 file_exists = os.path.isfile(filepath)
 
@@ -37,12 +37,10 @@ with open(filepath, 'a', newline='') as csvfile:
 
             current[beacon_id] = rssi;
 
-            print(current)
-
             if None in current.values():
                 continue
 
             writer.writerow([x, y, current[11], current[12], current[13]])
-       
+            print([x, y, current[11], current[12], current[13]])   
         print(f"{i+1}/{n}")
         exit_code = process.wait()
