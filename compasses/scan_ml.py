@@ -3,16 +3,20 @@ import statistics
 import joblib
 import pandas as pd
 
-loaded_model = joblib.load('rf_model.joblib')
+rf = joblib.load('rf_model.joblib')
+print("loaded random forest model!")
 
-current = {
-        11: None,
-        12: None,
-        13: None
+Q = 0.1
+R = 100
+
+kalman = {
+        '11': [],
+        '12': [],
+        '13': []
 }
 
 while True:
-
+    
     process = subprocess.Popen(
             ["sudo","./cli/scanner_AD"],
             stdout=subprocess.PIPE,
@@ -21,15 +25,34 @@ while True:
 
     for line in process.stdout:
         data = line.split()
-        beacon = int(data[0] + data[1])
-        rssi = abs(int(data[2]))
+        beacon = data[0] + data[1]
+        rssi = int(data[2])
 
-        current[beacon] = rssi
+        if not kalman[beacon]:
+            X_est = rssi
+            P = 1.0
+        else:
+            X_est_prev = kalman[beacon][-1][0]
+            P_prev = kalman[beacon][-1][1]
 
-        if None in current.values():
-            continue
+            X_est_pred = X_est_prev
+            P_pred = P_prev + Q
 
-        live_data = pd.DataFrame([[current.values()]], columns=['b1', 'b2', 'b3'])
-        prediction = loaded_model.predict(live_data)
-        print(prediction)
+            K = P_pred / (P_pred + R)
+            X_est = X_est_pred + K * (rssi - X_est_pred)
+
+            P = (1 - K) * P_pred
+
+            kalman[beacon].pop(0)
+
+        kalman[beacon].append([X_est, P])
+
+    current = {b: int(r[0][0]) for b, r in kalman.items()}
+    
+    live_data = pd.DataFrame([current])
+    print(live_data)
+    prediction = rf.predict(live_data)
+    print(prediction)
+
+    exit_codes = process.wait()
 
