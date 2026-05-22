@@ -5,3 +5,4 @@
 .micropico
 Icon*
 __pycache__/
+*.joblib
