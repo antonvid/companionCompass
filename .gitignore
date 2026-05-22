@@ -4,3 +4,4 @@
 .vscode
 .micropico
 Icon*
+__pycache__/

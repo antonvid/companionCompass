@@ -2,25 +2,36 @@
 import subprocess
 import csv
 import os
+from importlib import resources as impresources
+import BLEpos.data as dataDir
+import BLEpos.cli as cliDir
 
-scan_filepath = "../cli/scanner_AD"
+scanner_filename = "scanner_AD" # define which cli scannner we are using
 
-# data collection function, takes filepath and number of scans
-def collect(filepath, n):
+cli = impresources.files(cliDir) / scanner_filename # get cli scanner
 
-    print(f"storing data to {filepath}!")
+# data collection function, takes filename and number of scans
+def collect(filename, n_scan):
 
-    file_exists = os.path.isfile(filepath)
-    
-    with open(filepath, 'a', newline='') as csvfile: # open data file
+    file = impresources.files(dataDir) / f"{filename}.csv" # get data file
+
+    # check if the data file already exists
+    if file.exists():
+        print(f"storing data to data/{filename}.csv!")
+        file_exists = True
+    else:
+        print(f"creating file data/{filename}.csv to store data!")
+        file_exists = False
+
+    with open(file, 'a', newline='') as csvfile: # open data file
         writer = csv.writer(csvfile)
 
         # if data file is new, write headers
         if not file_exists:
-            writer.writerow(["x", "y", "b1", "b2", "b3"])
+            writer.writerow(["x", "y", "11", "12", "13"])
         
-        # repeats indefinitly until keyboard interrupt
-        while True:
+        # repeats indefinitly until keyboard interrupt, unless user specifies 0 scans
+        while n_scan:
 
             try:
                 print("press Ctrl+C if you have finished, else:")
@@ -28,8 +39,7 @@ def collect(filepath, n):
                 x = int(input("enter x co-ordinate: "))
                 y = int(input("enter y co-ordinate: "))
             except KeyboardInterrupt:
-                print(process.wait())
-                print('goodbye\n')
+                print('goodbye')
                 break
             
             # initiate/clear rssi data for each beacon
@@ -39,11 +49,11 @@ def collect(filepath, n):
                     13: None
             }
 
-            for i in range(n): # for number of scans 
+            for i in range(n_scan): # for number of scans 
                 
                 # run CLI scanner
                 process = subprocess.Popen(
-                        ["sudo",scan_filepath],
+                        ["sudo", str(cli)],
                         stdout=subprocess.PIPE,
                         text=True
                 )
@@ -66,8 +76,8 @@ def collect(filepath, n):
                     writer.writerow([x, y, current[11], current[12], current[13]])
                     print([x, y, current[11], current[12], current[13]])  
 
-                print(f"scan {i+1}/{n}")
-                exit_code = process.wait() # wait until CLI scan is finished for running again
+                print(f"scan {i+1}/{n_scan}")
+                exit_code = process.wait() # wait until CLI scan is finished before running again
 
 # if file ran as script:
 if __name__ == "__main__":
@@ -76,11 +86,11 @@ if __name__ == "__main__":
 
     # ask user for file name and number of scans
     
-    print("this data will be stored to companionCompass/data/[name].csv")
-    filename = str(input("[name] =  "))
+    print("this data will be stored to ../data/[name].csv")
+    filename = str(input("[name] = "))
     filepath = f"../data/{filename}.csv"
     
-    print("this data collector is using the {scan_filepath} CLI scanner")
+    print(f"this data collector is using the {scan_filepath} CLI scanner")
     print("for each coordinate, it will run this [n] times")
     n = int(input("[n] = "))
 
