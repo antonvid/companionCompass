@@ -21,11 +21,11 @@ You will need the following hardware:
       <li>Install Thonny at https://thonny.org/</li>
       <li>While holding down the BOOTSEL button on the Pico connect it to your machine, it should appear as a storage device</li>
       <li>
-        Open Thonny, in the bottom right there should be a drop down menu where you can select "Install MicroPython..."
+        Open Thonny, in the bottom right there should be a drop down menu where you can select 'Install MicroPython...'
         <img width="1016" height="845" alt="Screenshot 2026-05-22 at 11 50 37 pm" src="https://github.com/user-attachments/assets/bfbfc7d6-e04e-407c-bb45-0b008d636fdf" />
       </li>
       <li>
-        Make sure to select the right options, it should look something like this: 
+        Select your options, they should look something like this, and click 'Install': 
         <img width="972" height="801" alt="Screenshot 2026-05-22 at 11 53 45 pm" src="https://github.com/user-attachments/assets/7c2cdd73-119f-402d-b5f4-752064d0dbda" />
       </li>
       <li>
@@ -36,6 +36,21 @@ You will need the following hardware:
       <li>
         You can now quit the Thonny app, disconnect the Pico and plug it back in to test it works. Once powered, the Pico's LED should flash quickly, signifiying it is advertising!
       </li>
+      <h4>Set up tracker<h4>
+      <li>
+        Extensive instructions on how to setup a Raspberry Pi can be found here: https://www.raspberrypi.com/documentation/computers/getting-started.html
+        I would recommend doing a 'headless' setup, meaning the Pi doesn't need a keyboard, mouse or monitor to operate
+        Make sure you have a method to ssh into the Pi, WiFi is very simple to configure, but you can also look into USB gadget mode so you don't have to worry about having access to WiFi
+      </li>
+      <li>
+        Once your Pi is set up with an os and you are ssh'd into it, you should run `sudo apt update` and `sudo apt upgrade` to insure everything is up to date
+      </li>
+      <li>
+        Clone the repo to the Pi
+      </li>
+      <li>
+        Create a Python virtual environment, this will allow us to install the most recent versions of packages, rather than using apt
+        `python -m venv ~/env`
     </ol>
   </li>
 </ol>
