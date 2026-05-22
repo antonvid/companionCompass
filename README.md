@@ -36,7 +36,7 @@ You will need the following hardware:
       <li>
         You can now quit the Thonny app, disconnect the Pico and plug it back in to test it works. Once powered, the Pico's LED should flash quickly, signifiying it is advertising!
       </li>
-      <h4>Set up tracker<h4>
+      <h4>Set up tracker</h4>
       <li>
         Extensive instructions on how to setup a Raspberry Pi can be found here: https://www.raspberrypi.com/documentation/computers/getting-started.html
         I would recommend doing a 'headless' setup, meaning the Pi doesn't need a keyboard, mouse or monitor to operate
