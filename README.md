@@ -43,7 +43,7 @@ You will need the following hardware:
         Make sure you have a method to ssh into the Pi, WiFi is very simple to configure, but you can also look into USB gadget mode so you don't have to worry about having access to WiFi
       </li>
       <li>
-        Once your Pi is set up with an os and you are ssh'd into it, you should run `sudo apt update` and `sudo apt upgrade` to insure everything is up to date
+        Once your Pi is set up with an os and you are ssh'd into it, you should run `sudo apt update` and `sudo apt upgrade` to insure everything is up to date, and run `sudo apt install python3-pip`
       </li>
       <li>
         Clone the repo to the Pi
@@ -51,6 +51,13 @@ You will need the following hardware:
       <li>
         Create a Python virtual environment, this will allow us to install the most recent versions of packages, rather than using apt
         `python -m venv ~/env`
+      </li>
+      <li>
+        Activate the virtual environment using `source ~/env/bin/activate`
+      </li>
+      <li>
+        Goto the 
+      </li>
     </ol>
   </li>
 </ol>
