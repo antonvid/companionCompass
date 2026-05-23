@@ -42,11 +42,13 @@ Once it's opened you can save it to the Pico by pressing CMD/CTRL + SHIFT + S on
 
 ### Set up tracker
 1. Extensive instructions on how to setup a Raspberry Pi can be found here: https://www.raspberrypi.com/documentation/computers/getting-started.html
-I would recommend doing a 'headless' setup, meaning the Pi doesn't need a keyboard, mouse or monitor to operate
+I would recommend doing a 'headless' setup, meaning the Pi doesn't need a keyboard, mouse or monitor to operate.
 Make sure you have a method to ssh into the Pi, WiFi is very simple to configure, but you can also look into USB gadget mode so you don't have to worry about having access to WiFi
-2. Once your Pi is set up with an os and you are ssh'd into it, you should run `sudo apt update` and `sudo apt upgrade` to insure everything is up to date, and run `sudo apt install python3-pip`
-to install the python package installer. We use this instead of `apt` as i
+3. Once your Pi is set up with an os and you are ssh'd into it, you should run `sudo apt update` and `sudo apt upgrade` to insure everything is up to date, and run `sudo apt install python3-pip` 
+to install the python package installer.
 4. Clone the repo to the Pi
 5. Create a Python virtual environment, this will allow us to install the most recent versions of packages, rather than using apt
 `python -m venv ~/env`
 6. Activate the virtual environment using `source ~/env/bin/activate`
+7. `cd` into the repo and run `pip install -r requirements.txt` to install all the required python packages for this project
+8. Once that's finished we are now ready to start locating! 
