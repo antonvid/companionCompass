@@ -57,7 +57,7 @@ to install the python package installer.
 ## Using the BLEpos package
 This project's main features have been compiled into a user-friendly Python package, allowing you to train a Random Forest model on your space, and then use this model to locate the tracker in real-time.
 Before starting, you should have 3 beacons placed around your space and running, and you should be ssh'd into the tracker.
-### BLEpos.train
+### `BLEpos.train`
 This module allows you to collect data for each coordinate of your space, with as many scans as you specify. Bear in mind this can be a slow process if you choose to take lots of scans (>30)
 1. On the tracker, make sure the virtual environment is activated, and `cd` to the folder containing the BLEpos package: `cd path/to/repo/compasses/src`
 2. Run the BLEpos.train module: `python -m BLEpos.train`, this will ask for an id for your space and for the number of scans you want to perform per coordinate. The space id is used to store data and ML models so remember it!
@@ -68,4 +68,6 @@ This module allows you to collect data for each coordinate of your space, with a
 7. The module will then aggregate all this data and train a Random Forest model on it, and it's performance will be measured and shown
 8. The module is now finished and will have stored a model for your space that you can now use to estimate the trackers location within that space!
 
-##
+### BLEpos.scan
+This module uses a previously trained model to predict the tracker's location!
+1. 
