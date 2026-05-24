@@ -4,11 +4,22 @@ This project uses low-cost hardware to create an accurate indoor positioning sys
 - Step-by-step data collection
 - RandomForest model training
 - Displays an estimate of your location
-- Saves data and models which can be later updated with new data
+- Saves data which can be later appended with new data automatically trains model on new dataset
+## Limitations
+- Real world accuracy is yet to be tested and quantified
+- The user-friendly script does not allow changing some parameters such as number of decision trees and size of data aggregation chunks
+- No live graphical visualisation of tracker's estimated location, plain coords make visualising error hard
+- No user input validation to handle errors
 ## How to set up
+### Hardware
 You will need the following hardware:
 - At least three Raspberry Pi Pico W to use as beacons
 - Raspberry Pi Zero 2W to use as a tracker
+### Space
+- You will also need a constant space in which you want to train the Random Forest model to estimate the tracker's coordinate.
+- This project works well with each coordinate being 1m apart, however if you want to keep it simple you can choose a few landmarks and give them arbitrary coordinates, since we are using classification models, and each coordinate is treated as a discrete value
+- It's good to have each coordinate marked so you can easily collect data and also confirm the accuracy of the model
+- Sample data collected from Hatchlabs and the model trained on it, can be found within the BLEpos package
 
 ### Set up beacons
 1. Install Thonny at [thonny.org](https://thonny.org/)
@@ -20,7 +31,7 @@ You will need the following hardware:
 4. Once it has finished you can upload the beacons/main.py script from this repo to the Pico. This will make Pico act as a BLE beacon, sending an advertisement every 100ms!.
 Click the 'Open' button on the top left, select "This computer", and find the main.py file in your local repo to open it
 Once it's opened you can save it to the Pico by pressing CMD/CTRL + SHIFT + S on your keyboard, select 'Raspberry Pi Pico', and enter the file name 'main.py' before clicking OK
-5. Our beacons are identified by their major and minor values, which are determined within main.py:
+5. Our beacons are identified by their major and minor values, which are determined within `main.py`:
     ```python
     def demo(adv_interval):
     beacon = iBeacon(
