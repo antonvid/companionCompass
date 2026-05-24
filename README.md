@@ -14,9 +14,9 @@ You will need the following hardware:
 1. Install Thonny at [thonny.org](https://thonny.org/)
 2. While holding down the BOOTSEL button on the Pico connect it to your machine, it should appear as a storage device
 3. Open Thonny, in the bottom right there should be a drop down menu where you can select 'Install MicroPython...'
-![](https://github.com/user-attachments/assets/bfbfc7d6-e04e-407c-bb45-0b008d636fdf)
+![install micropython](https://github.com/user-attachments/assets/bfbfc7d6-e04e-407c-bb45-0b008d636fdf)
 3. Select your options, they should look something like this, and click 'Install': 
-![](https://github.com/user-attachments/assets/7c2cdd73-119f-402d-b5f4-752064d0dbda)
+![installation options](https://github.com/user-attachments/assets/7c2cdd73-119f-402d-b5f4-752064d0dbda)
 4. Once it has finished you can upload the beacons/main.py script from this repo to the Pico. This will make Pico act as a BLE beacon, sending an advertisement every 100ms!.
 Click the 'Open' button on the top left, select "This computer", and find the main.py file in your local repo to open it
 Once it's opened you can save it to the Pico by pressing CMD/CTRL + SHIFT + S on your keyboard, select 'Raspberry Pi Pico', and enter the file name 'main.py' before clicking OK
@@ -50,7 +50,7 @@ to install the python package installer.
 4. Clone the repo to the Pi
 5. Create a Python virtual environment, this will allow us to install the most recent versions of packages, rather than using apt
 `python -m venv ~/env`
-6. Activate the virtual environment using `source ~/env/bin/activate`
+6. Activate the virtual environment using `source ~/env/bin/activate`, you can confirm it's activated with the tag added to the start of the terminal cursor: ![venv](https://github.com/user-attachments/assets/5672d9d1-0789-4eb6-9196-908651828456)
 7. `cd` into the repo and run `pip install -r requirements.txt` to install all the required python packages for this project
 8. Once that's finished we are now ready to start locating! 
 
@@ -68,6 +68,10 @@ This module allows you to collect data for each coordinate of your space, with a
 7. The module will then aggregate all this data and train a Random Forest model on it, and it's performance will be measured and shown
 8. The module is now finished and will have stored a model for your space that you can now use to estimate the trackers location within that space!
 
-### BLEpos.scan
+### `BLEpos.scan`
 This module uses a previously trained model to predict the tracker's location!
-1. 
+1. On the tracker, make sure the virtual environment is activated, and `cd` to the folder containing the BLEpos package: `cd path/to/repo/compasses/src`
+2. Run the BLEpos.scan module: `python -m BLEpos.train`, and enter the id of the space you trained the model on
+3. The models prediciton using live beacon RSSI data should now be displayed on the terminal!
+
+
