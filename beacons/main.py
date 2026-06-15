@@ -5,7 +5,7 @@ from micropython import const
 from machine import Pin
 from time import sleep
 
-MANUFACTURER_ID         = const(0x004C)
+MANUFACTURER_ID         = const(0x2901)
 DEVICE_TYPE             = const(0x02)
 DATA_LENGTH             = const(0x15)
 BR_EDR_NOT_SUPPORTED    = const(0x04)
