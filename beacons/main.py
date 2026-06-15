@@ -73,8 +73,8 @@ def demo(adv_interval):
                         0xa4, 0x95, 0xbb, 0x10, 0xc5, 0xb1, 0x4b, 0x44, 
                         0xb5, 0x12, 0x13, 0x70, 0xf0, 0x2d, 0x74, 0xde
                     )),
-        major       = 62,
-        minor       = 1050,
+        major       = 1,
+        minor       = 1,
         tx_power    = -50,
         interval 	= adv_interval
     )
